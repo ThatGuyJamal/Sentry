@@ -11,6 +11,7 @@ A moderation bot for [Code Long & Profit](https://discord.gg/qMJfVG5VhB).
 ```env
 BOT_ID=""
 BOT_TOKEN=""
+BOT_PREFIX=""
 ```
 
 4. Build the typescript files with `npm run build` or `yarn build`

@@ -1,13 +1,12 @@
-import { Client } from "oceanic.js";
+import { Client, Collection } from "oceanic.js";
 import { config } from "dotenv";
-import { validateEnv } from "./utils.js";
+import { loadCommands, processCommands, validateEnv } from "./utils.js";
+import type { IClient } from "types.js";
 
 config(); // Load .env file
 
 // Validate environment variables
 validateEnv();
-
-const PREFIX = process.env.BOT_PREFIX as string // we can omit type as we have validated it.
 
 const client = new Client({
 	auth: `Bot ${process.env.BOT_TOKEN}`,
@@ -15,20 +14,19 @@ const client = new Client({
 		// Enables caching on the discord gateway. This is required for the cache to work.
 		intents: ["GUILDS", "GUILD_MEMBERS", "GUILD_MESSAGES", "MESSAGE_CONTENT"],
 	},
-});
+}) as IClient;
 
-client.on("ready", () => {
+client.commands = new Collection();
+
+client.on("ready", async () => {
+	await loadCommands(client);
 	console.log("Ready!");
 });
 
 // Message Sent
 // https://docs.oceanic.ws/latest/interfaces/Events.ClientEvents.html#messageCreate
-client.on("messageCreate", (msg) => {
-	if (msg.author.bot) return; // Ignore bots
-    
-    if(msg.content === `${PREFIX}ping`) {
-        msg.channel?.createMessage({ content: "pong" })
-    }
+client.on("messageCreate", async (msg) => {
+	await processCommands(client, msg);
 });
 
 // An error handler
