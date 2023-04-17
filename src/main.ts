@@ -11,7 +11,7 @@ validateEnv();
 const client = new Client({
 	auth: `Bot ${process.env.BOT_TOKEN}`,
 	gateway: {
-		// Enables caching on the discord gateway. This is required for the cache to work.
+		// Which events we want from the discord api.
 		intents: ["GUILDS", "GUILD_MEMBERS", "GUILD_MESSAGES", "MESSAGE_CONTENT"],
 	},
 }) as IClient;
