@@ -1,21 +1,28 @@
 import { Message } from "oceanic.js";
 import { IClient } from "types";
 
-const permissions = "1497601535190"; // https://discordapi.com/permissions.html
+const permissions = "1497601535190"; // https://discordapi.com/permissions.html#1497601535190
 export const constants = {
 	BOT_INVITE: `https://discord.com/api/oauth2/authorize?client_id=${process.env.BOT_ID}&permissions=${permissions}&scope=bot%20applications.commands`,
 };
 
 /** Makes sure the .env file has all its requirements */
-export function validateEnv() {
-	if (!process.env.BOT_TOKEN)
-		throw new Error("BOT_TOKEN is not defined in the .env file.");
-	if (!process.env.BOT_ID)
-		throw new Error("BOT_ID is not defined in the .env file.");
-	if (!process.env.BOT_PREFIX)
-		throw new Error("BOT_PREFIX is not defined in the .env file.");
+export function validateEnv({
+	BOT_TOKEN,
+	BOT_ID,
+	BOT_PREFIX,
+	logger = console,
+}: {
+	BOT_TOKEN: string;
+	BOT_ID: string;
+	BOT_PREFIX: string;
+	logger?: Console;
+}) {
+	if (!BOT_TOKEN) throw new Error("BOT_TOKEN is not defined in the .env file.");
+	if (!BOT_ID) throw new Error("BOT_ID is not defined in the .env file.");
+	if (!BOT_PREFIX) throw new Error("BOT_PREFIX is not defined in the .env file.");
 
-	console.log("Environment variables validated.");
+	logger.log("Environment variables validated.");
 }
 
 /**
