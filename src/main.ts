@@ -6,10 +6,16 @@ import type { IClient } from "types.js";
 config(); // Load .env file
 
 // Validate environment variables
-validateEnv();
+const envVariables = {
+	BOT_TOKEN: process.env.BOT_TOKEN as string,
+	BOT_ID: process.env.BOT_ID as string,
+	BOT_PREFIX: process.env.BOT_PREFIX as string,
+	logger: console,
+};
+validateEnv(envVariables);
 
 const client = new Client({
-	auth: `Bot ${process.env.BOT_TOKEN}`,
+	auth: `Bot ${envVariables.BOT_TOKEN}`,
 	gateway: {
 		// Which events we want from the discord api.
 		intents: ["GUILDS", "GUILD_MEMBERS", "GUILD_MESSAGES", "MESSAGE_CONTENT"],
