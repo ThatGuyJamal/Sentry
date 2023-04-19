@@ -1,5 +1,5 @@
 import { Message } from "oceanic.js";
-import { IClient } from "types";
+import { IClient, ILogger } from "types";
 
 const permissions = "1497601535190"; // https://discordapi.com/permissions.html#1497601535190
 export const constants = {
@@ -16,7 +16,7 @@ export function validateEnv({
 	BOT_TOKEN: string;
 	BOT_ID: string;
 	BOT_PREFIX: string;
-	logger?: Console;
+	logger?: ILogger;
 }) {
 	if (!BOT_TOKEN) throw new Error("BOT_TOKEN is not defined in the .env file.");
 	if (!BOT_ID) throw new Error("BOT_ID is not defined in the .env file.");
@@ -35,7 +35,7 @@ export async function processCommands(client: IClient, message: Message) {
 		const PREFIX = process.env.BOT_PREFIX as string;
 
 		// We make sure the message is a command, not a bot, and not in a DM channel.
-		if (!message.content.startsWith(PREFIX) || message.author.bot) return;
+		if (!message.content.startsWith(PREFIX)) return;
 
 		// Before we process the command, we need to split the message into an array and get its arguments.
 		// This removes the prefix and splits the message into an array of arguments we can read.
@@ -68,6 +68,7 @@ export async function processCommands(client: IClient, message: Message) {
  * @param client
  */
 export async function loadCommands(client: IClient) {
+	// TODO: Turn this into a pure function.
 	const pingCommand = (await import("./commands/ping.js")).default;
 
 	client.commands.set(pingCommand.trigger, pingCommand);
