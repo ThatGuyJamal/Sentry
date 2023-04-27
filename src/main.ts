@@ -2,6 +2,7 @@ import { Client, Collection } from "oceanic.js";
 import { config } from "dotenv";
 import { loadCommands, processCommands, validateEnv } from "./utils.js";
 import type { IClient } from "types.js";
+import { processSpamModeration } from "spamModeration.js";
 
 config(); // Load .env file
 
@@ -32,7 +33,11 @@ client.on("ready", async () => {
 // Message Sent
 // https://docs.oceanic.ws/latest/interfaces/Events.ClientEvents.html#messageCreate
 client.on("messageCreate", async (msg) => {
+	// We don't want to process messages from bots.
+	if (msg.author.bot) return;
+
 	await processCommands(client, msg);
+	await processSpamModeration(client, msg);
 });
 
 // An error handler

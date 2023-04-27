@@ -1,4 +1,4 @@
-import { Command } from "../types.js";
+import { ICommand } from "../types.js";
 
 export default {
 	trigger: "ping",
@@ -6,4 +6,4 @@ export default {
 	async run(_client, message) {
 		await message.channel?.createMessage({ content: "Pong!" });
 	},
-} as Command;
+} as ICommand;
