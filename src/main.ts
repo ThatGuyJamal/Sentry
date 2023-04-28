@@ -2,7 +2,7 @@ import { Client, Collection } from "oceanic.js";
 import { config } from "dotenv";
 import { loadCommands, processCommands, validateEnv } from "./utils.js";
 import type { IClient } from "types.js";
-import { processSpamModeration } from "spamModeration.js";
+import { processSpamModeration } from "./spamModeration";
 
 config(); // Load .env file
 
@@ -11,6 +11,7 @@ const envVariables = {
 	BOT_TOKEN: process.env.BOT_TOKEN as string,
 	BOT_ID: process.env.BOT_ID as string,
 	BOT_PREFIX: process.env.BOT_PREFIX as string,
+	MODERATORS_ID: process.env.MODERATORS_ID as string,
 	logger: console,
 };
 validateEnv(envVariables);

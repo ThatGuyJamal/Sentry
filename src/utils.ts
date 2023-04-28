@@ -1,7 +1,7 @@
 import { Message } from "oceanic.js";
 import { IClient, ILogger } from "types";
 
-const permissions = "1497601535190"; // https://discordapi.com/permissions.html#1497601535190
+const permissions = "1497601666262"; // https://discordapi.com/permissions.html#1497601666262
 export const constants = {
 	BOT_INVITE: `https://discord.com/api/oauth2/authorize?client_id=${process.env.BOT_ID}&permissions=${permissions}&scope=bot%20applications.commands`,
 };
@@ -11,16 +11,19 @@ export function validateEnv({
 	BOT_TOKEN,
 	BOT_ID,
 	BOT_PREFIX,
+	MODERATORS_ID,
 	logger = console,
 }: {
 	BOT_TOKEN: string;
 	BOT_ID: string;
 	BOT_PREFIX: string;
+	MODERATORS_ID: string;
 	logger?: ILogger;
 }) {
 	if (!BOT_TOKEN) throw new Error("BOT_TOKEN is not defined in the .env file.");
 	if (!BOT_ID) throw new Error("BOT_ID is not defined in the .env file.");
 	if (!BOT_PREFIX) throw new Error("BOT_PREFIX is not defined in the .env file.");
+	if (!MODERATORS_ID) throw new Error("MODERATORS_ID is not defined in the .env file.");
 
 	logger.log("Environment variables validated.");
 }

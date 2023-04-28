@@ -5,8 +5,9 @@ import { IClient, ILogger } from "types";
 const spamCache = new Map();
 
 // Number of duplicate messages to trigger a spam warning
-export const spamThreshold = 3;
+export const spamThreshold = 2;
 export const spamTimeThreshold = 5 * 1000; // 5 seconds
+export const spammerMuteTime = 24 * 60 * 60 * 1000; // 24 hours
 
 export type UserMessage = {
 	authorId: string;
@@ -47,9 +48,7 @@ export function isSpamming(
 		spamCache.set(authorId, recentMessages);
 
 		// Check for spamming
-		const duplicateMessages = recentMessages.filter(
-			(msg: UserMessage) => msg.content === content && msg.channelId !== channelId
-		);
+		const duplicateMessages = recentMessages.filter((msg: UserMessage) => msg.content === content);
 
 		if (duplicateMessages.length >= spamThreshold) {
 			return true;
@@ -64,9 +63,22 @@ export function isSpamming(
 
 export async function processSpamModeration(client: IClient, message: Message, logger: ILogger = console) {
 	try {
-		if (isSpamming(message.author.id, message.channelID, message.content, new Date(), logger)) {
-			// TODO: Handle spamming
+		const x = client.gatewayURL;
+		logger.log("Checking spam...", x);
+		if (
+			!message.member?.permissions.json.ADMINISTRATOR &&
+			!message.member?.communicationDisabledUntil &&
+			isSpamming(message.author.id, message.channelID, message.content, new Date(), logger)
+		) {
 			logger.log("Spam detected!");
+
+			await message.channel?.createMessage({
+				content: `Spam detected! You're going to timeout. FYI <@&${process.env.MODERATORS_ID}>`,
+			});
+
+			await message.member?.edit({
+				communicationDisabledUntil: new Date(Date.now() + spammerMuteTime).toISOString(),
+			});
 		}
 	} catch (error) {
 		logger.error(error);

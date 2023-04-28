@@ -1,4 +1,4 @@
-# Sentry 
+# Sentry
 
 A moderation bot for [Code Long & Profit](https://discord.gg/qMJfVG5VhB).
 
@@ -12,6 +12,7 @@ A moderation bot for [Code Long & Profit](https://discord.gg/qMJfVG5VhB).
 BOT_ID=""
 BOT_TOKEN=""
 BOT_PREFIX=""
+MODERATORS_ID=1234
 ```
 
 4. Build the typescript files with `npm run build` or `yarn build`
