@@ -11,19 +11,19 @@ export function validateEnv({
 	BOT_TOKEN,
 	BOT_ID,
 	BOT_PREFIX,
-	MODERATORS_ID,
+	MOD_ROLE_ID,
 	logger = console,
 }: {
 	BOT_TOKEN: string;
 	BOT_ID: string;
 	BOT_PREFIX: string;
-	MODERATORS_ID: string;
+	MOD_ROLE_ID: string;
 	logger?: ILogger;
 }) {
 	if (!BOT_TOKEN) throw new Error("BOT_TOKEN is not defined in the .env file.");
 	if (!BOT_ID) throw new Error("BOT_ID is not defined in the .env file.");
 	if (!BOT_PREFIX) throw new Error("BOT_PREFIX is not defined in the .env file.");
-	if (!MODERATORS_ID) throw new Error("MODERATORS_ID is not defined in the .env file.");
+	if (!MOD_ROLE_ID) throw new Error("MOD_ROLE_ID is not defined in the .env file.");
 
 	logger.log("Environment variables validated.");
 }
@@ -44,12 +44,12 @@ export async function processCommands(client: IClient, message: Message) {
 		// This removes the prefix and splits the message into an array of arguments we can read.
 		const args = message.content.slice(PREFIX.length).trim().split(/ +/);
 
-		console.log("args", args);
+		// console.log("args", args);
 
 		// We get the command name from the first argument.
 		const command = args.shift()?.toLowerCase();
 
-		console.log("command", command);
+		// console.log("command", command);
 
 		if (command) {
 			// We check if the command exists in the commands collection.

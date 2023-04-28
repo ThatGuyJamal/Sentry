@@ -1,4 +1,4 @@
-import { Client, Collection } from "oceanic.js";
+import { Client, Collection, TextChannel } from "oceanic.js";
 import { config } from "dotenv";
 import { loadCommands, processCommands, validateEnv } from "./utils.js";
 import type { IClient } from "types.js";
@@ -11,7 +11,7 @@ const envVariables = {
 	BOT_TOKEN: process.env.BOT_TOKEN as string,
 	BOT_ID: process.env.BOT_ID as string,
 	BOT_PREFIX: process.env.BOT_PREFIX as string,
-	MODERATORS_ID: process.env.MODERATORS_ID as string,
+	MOD_ROLE_ID: process.env.MOD_ROLE_ID as string,
 	logger: console,
 };
 validateEnv(envVariables);
@@ -29,6 +29,13 @@ client.commands = new Collection();
 client.on("ready", async () => {
 	await loadCommands(client);
 	console.log("Ready!");
+
+	let ch = client.getChannel("837863488864124931") as TextChannel;
+	if (ch) {
+		await ch.createMessage({
+			content: `**${client.user.username}** is online and ready to moderate! :crossed_swords: `,
+		});
+	}
 });
 
 // Message Sent
