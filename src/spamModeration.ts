@@ -7,7 +7,7 @@ const spamCache = new Map();
 // Number of duplicate messages to trigger a spam warning
 export const spamThreshold = 2;
 export const spamTimeThreshold = 5 * 1000; // 5 seconds
-export const spammerMuteTime = 5 * 60 * 1000; // 5 minutes
+export const spammerMuteTime = 24 * 60 * 60 * 1000; // 24 hours
 
 export type UserMessage = {
 	authorId: string;
