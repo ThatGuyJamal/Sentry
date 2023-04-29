@@ -33,7 +33,7 @@ export function validateEnv({
  */
 export async function processCommands(client: IClient, message: Message) {
 	try {
-		console.log("message content", message.content);
+		// console.log("message content", message.content);
 
 		const PREFIX = process.env.BOT_PREFIX as string;
 
@@ -55,7 +55,7 @@ export async function processCommands(client: IClient, message: Message) {
 			// We check if the command exists in the commands collection.
 			const cmd = client.commands.get(command);
 
-			console.log("cmd", cmd);
+			// console.log("cmd", cmd);
 
 			if (cmd) return await cmd.run(client, message); // if the command exist we run it.
 		}
