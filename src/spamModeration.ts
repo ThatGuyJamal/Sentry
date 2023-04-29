@@ -2,19 +2,18 @@ import { Message } from "oceanic.js";
 import { IClient, ILogger } from "types";
 
 // Store user messages for spam detection
-const spamCache = new Map();
+const spamCache = new Map<string, UserMessage>();
 
 // Number of duplicate messages to trigger a spam warning
-export const spamThreshold = 2;
+export const spamThreshold = 3;
 export const spamTimeThreshold = 5 * 1000; // 5 seconds
 export const spammerMuteTime = 24 * 60 * 60 * 1000; // 24 hours
 
 export type UserMessage = {
-	authorId: string;
 	channelId: string;
 	content: string;
 	timestamp: Date;
-};
+}[];
 
 /**
  * Checks if a message is spamming.
@@ -35,22 +34,26 @@ export function isSpamming(
 		}
 
 		const userMessages = spamCache.get(authorId);
-		userMessages.push({
+		userMessages?.push({
 			content: content,
-			channelID: channelId,
+			channelId: channelId,
 			timestamp: timestamp,
 		});
 
 		// Remove old messages from cache (you can customize the time range)
-		const recentMessages = userMessages.filter(
-			(msg: UserMessage) => timestamp.getTime() - msg.timestamp.getTime() < spamTimeThreshold
+		const recentMessages = userMessages?.filter(
+			(msg) => timestamp.getTime() - msg.timestamp.getTime() < spamTimeThreshold
 		);
-		spamCache.set(authorId, recentMessages);
+		spamCache.set(authorId, recentMessages!);
 
 		// Check for spamming
-		const duplicateMessages = recentMessages.filter((msg: UserMessage) => msg.content === content);
+		const duplicateMessages = recentMessages?.filter((msg) => msg.content === content);
 
-		if (duplicateMessages.length >= spamThreshold) {
+		console.dir(userMessages, { depth: Infinity });
+		console.dir(recentMessages, { depth: Infinity });
+		console.dir(duplicateMessages, { depth: Infinity });
+
+		if (duplicateMessages!.length >= spamThreshold) {
 			return true;
 		}
 
@@ -66,19 +69,26 @@ export async function processSpamModeration(client: IClient, message: Message, l
 		const x = client.gatewayURL;
 		logger.log("Checking spam...", x);
 		if (
-			!message.member?.permissions.json.ADMINISTRATOR &&
+			!message.member?.permissions.json.MANAGE_MESSAGES &&
 			!message.member?.communicationDisabledUntil &&
 			isSpamming(message.author.id, message.channelID, message.content, new Date(), logger)
 		) {
 			logger.log("Spam detected!");
 
 			await message.channel?.createMessage({
-				content: `Spam detected! You're going to timeout. FYI <@&${process.env.MODERATORS_ID}>`,
+				content: `Spam detected! You're going to timeout. FYI ` + `<@&${process.env.MOD_ROLE_ID}>`,
 			});
 
-			await message.member?.edit({
-				communicationDisabledUntil: new Date(Date.now() + spammerMuteTime).toISOString(),
-			});
+			await message.member
+				?.edit({
+					communicationDisabledUntil: new Date(Date.now() + spammerMuteTime).toISOString(),
+				})
+				.catch((error) => {
+					message.channel?.createMessage({
+						content: `Failed to mute <@${message.author.id}>. ${error.message}`,
+					});
+					logger.error(error);
+				});
 		}
 	} catch (error) {
 		logger.error(error);
