@@ -1,4 +1,4 @@
-import { Client, Collection, TextChannel } from "oceanic.js";
+import { Client, Collection } from "oceanic.js";
 import { config } from "dotenv";
 import { loadCommands, processCommands, validateEnv } from "./utils.js";
 import type { IClient } from "types.js";
@@ -30,12 +30,12 @@ client.on("ready", async () => {
 	await loadCommands(client);
 	console.log("Ready!");
 
-	let ch = client.getChannel("837863488864124931") as TextChannel;
-	if (ch) {
-		await ch.createMessage({
-			content: `**${client.user.username}** is online and ready to moderate! :crossed_swords: `,
-		});
-	}
+	// let ch = client.getChannel("837863488864124931") as TextChannel;
+	// if (ch) {
+	// 	await ch.createMessage({
+	// 		content: `**${client.user.username}** is online and ready to moderate! :crossed_swords: `,
+	// 	});
+	// }
 });
 
 // Message Sent
