@@ -49,9 +49,9 @@ export function isSpamming(
 		// Check for spamming
 		const duplicateMessages = recentMessages?.filter((msg) => msg.content === content);
 
-		console.dir(userMessages, { depth: Infinity });
-		console.dir(recentMessages, { depth: Infinity });
-		console.dir(duplicateMessages, { depth: Infinity });
+		// console.dir(userMessages, { depth: Infinity });
+		// console.dir(recentMessages, { depth: Infinity });
+		// console.dir(duplicateMessages, { depth: Infinity });
 
 		if (duplicateMessages!.length >= spamThreshold) {
 			return true;
@@ -64,16 +64,16 @@ export function isSpamming(
 	}
 }
 
-export async function processSpamModeration(client: IClient, message: Message, logger: ILogger = console) {
+export async function processSpamModeration(_client: IClient, message: Message, logger: ILogger = console) {
 	try {
-		const x = client.gatewayURL;
-		logger.log("Checking spam...", x);
+		// const x = client.gatewayURL;
+		// logger.log("Checking spam...", x);
 		if (
 			!message.member?.permissions.json.MANAGE_MESSAGES &&
 			!message.member?.communicationDisabledUntil &&
 			isSpamming(message.author.id, message.channelID, message.content, new Date(), logger)
 		) {
-			logger.log("Spam detected!");
+			// logger.log("Spam detected!");
 
 			await message.channel?.createMessage({
 				content: `Spam detected! You're going to timeout. FYI ` + `<@&${process.env.MOD_ROLE_ID}>`,

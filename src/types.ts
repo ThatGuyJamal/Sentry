@@ -4,7 +4,9 @@ export interface ICommand {
 	trigger: string;
 	description: string;
 	aliases?: string[]; // todo - implement  command aliases
-	run: (client: IClient, message: Message) => Promise<any> | any;
+	devOnly?: boolean;
+	usage?: string;
+	run: (client: IClient, message: Message, args: Array<string>) => Promise<any> | any;
 }
 
 /**
@@ -12,6 +14,7 @@ export interface ICommand {
  */
 export interface IClient extends Client {
 	commands: Collection<string, ICommand>;
+	moderatorIds: Set<string>;
 }
 
 /**

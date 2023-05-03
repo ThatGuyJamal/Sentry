@@ -25,17 +25,15 @@ const client = new Client({
 }) as IClient;
 
 client.commands = new Collection();
+client.moderatorIds = new Set([
+	"370637638820036608", // ThatGuyJamal
+	"715514079997067295", // GhostNinja
+	"798144206303395910", // progtesting
+]);
 
 client.on("ready", async () => {
 	await loadCommands(client);
-	console.log("Ready!");
-
-	// let ch = client.getChannel("837863488864124931") as TextChannel;
-	// if (ch) {
-	// 	await ch.createMessage({
-	// 		content: `**${client.user.username}** is online and ready to moderate! :crossed_swords: `,
-	// 	});
-	// }
+	console.log("Ready to moderate the chat!");
 });
 
 // Message Sent

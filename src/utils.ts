@@ -57,7 +57,11 @@ export async function processCommands(client: IClient, message: Message) {
 
 			// console.log("cmd", cmd);
 
-			if (cmd) return await cmd.run(client, message); // if the command exist we run it.
+			if(cmd?.devOnly && !client.moderatorIds.has(message.author.id)) {
+				return await message.channel?.createMessage({ content: `You don't have permissions to use this command ${message.author.username}` });
+			}
+
+			if (cmd) return await cmd.run(client, message, args); // if the command exist we run it.
 		}
 
 		return;
@@ -73,8 +77,14 @@ export async function processCommands(client: IClient, message: Message) {
 export async function loadCommands(client: IClient) {
 	// TODO: Turn this into a pure function.
 	const pingCommand = (await import("./commands/ping.js")).default;
+	const helpCommand = (await import("./commands/help.js")).default;
+	const statsCommand = (await import("./commands/stats.js")).default;
+	const reloadCommand = (await import("./commands/dev/reload.js")).default;
 
 	client.commands.set(pingCommand.trigger, pingCommand);
+	client.commands.set(helpCommand.trigger, helpCommand);
+	client.commands.set(statsCommand.trigger, statsCommand);
+	client.commands.set(reloadCommand.trigger, reloadCommand);
 
 	console.log(`Loaded ${client.commands.size} commands.`);
 }
